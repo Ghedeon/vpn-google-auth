@@ -6,6 +6,7 @@ CN_VPN_FILE="client.ovpn"
 CN_VPN_PATH="$(pwd)/"
 CN_USER="$USER"
 CN_PWD="default"
+CN_SECRET="default"
 CN_PROP=vpn.properties
 GCODE=-1
 
@@ -29,7 +30,8 @@ function promptTextGcode() {
 function connect(){
     BASE_DIR=$(pwd)
     #cd $CN_VPN_DIR
-    read -e -n 6 -p "$(promptTextGcode)" GCODE
+    #read -e -n 6 -p "$(promptTextGcode)" GCODE
+    GCODE=$(oathtool --totp -b $CN_SECRET)
     printUser
     FULL_PATH=$CN_VPN_PATH$CN_VPN_FILE
     expect ./vpn_fill.exp $CN_USER $CN_PWD $GCODE $FULL_PATH
@@ -61,9 +63,13 @@ function readProperties() {
     CN_VPN_FILE=$(getProperty "vpn.fileName")
     CN_USER=$(getProperty "vpn.user")
     CN_PWD=$(getProperty "vpn.password")
+    CN_SECRET=$(getProperty "vpn.secret")
 }
 
 ##### INIT #####
 validateRoot
+if [[ $# -ne 0 ]] ; then
+    CN_PROP=$1
+fi
 readProperties
 connect

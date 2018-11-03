@@ -27,6 +27,7 @@ vpn.user=pepe
 vpn.password=pepe1234
 vpn.path=/home/pepe/vpn/
 vpn.fileName=pepe-server-client.ovpn
+vpn.secret=ABCDEFG
 ```
 
 ## Execution
